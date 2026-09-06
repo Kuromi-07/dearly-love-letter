@@ -48,7 +48,6 @@ textarea { resize: vertical; line-height: 1.55; min-height: 125px; }
 .preview-toolbar span:first-child { display: flex; align-items: center; gap: 7px; }
 .letter-paper { min-height: 670px; background: var(--paper); padding: 27px clamp(28px, 5vw, 72px) 25px; box-shadow: 12px 15px 0 rgba(50,45,37,.04); position: relative; display: flex; flex-direction: column; animation: paper-in .9s .3s ease both; }
 .paper-topline, .paper-footer { display: flex; justify-content: space-between; color: #9a958b; font-size: 9px; }
-.developer-signature { color: var(--coral); margin-left: 10px; font-size: 8px; }
 .paper-topline span:last-child { color: var(--coral); font-size: 19px; line-height: 9px; }
 .paper-content { max-width: 520px; margin: auto; width: 100%; padding: 50px 0; }
 .paper-kicker { color: var(--coral); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .13em; margin: 0 0 28px; }
