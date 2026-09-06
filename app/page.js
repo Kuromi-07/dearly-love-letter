@@ -130,7 +130,7 @@ export default function Home() {
           <section className="preview-column" aria-label="Letter preview">
             <div className="preview-toolbar"><span><span className="live-dot" /> LIVE PREVIEW</span><span>{letter.body.length} characters</span></div>
             <article className="letter-paper">
-              <div className="paper-topline"><span>DEARLY / 2026</span><span>♡</span></div>
+              <div className="paper-topline"><span>DEARLY / 2026 <small className="developer-signature">DEVELOPER: KELKELPOGI</small></span><span>♡</span></div>
               <div className="paper-content">
                 <p className="paper-kicker">A NOTE FOR {letter.recipient ? letter.recipient.toUpperCase() : "SOMEONE SPECIAL"}</p>
                 <h2>{letter.title}</h2>
