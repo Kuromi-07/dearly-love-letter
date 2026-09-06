@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const templates = [
   {
@@ -41,10 +41,34 @@ const initialLetter = {
   signoff: "Always yours,",
 };
 
+const savedLetterKey = "dearly-letter";
+
 export default function Home() {
   const [letter, setLetter] = useState(initialLetter);
   const [activeTemplate, setActiveTemplate] = useState("classic");
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [hasLoadedSavedLetter, setHasLoadedSavedLetter] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedLetter = window.localStorage.getItem(savedLetterKey);
+      if (savedLetter) {
+        setLetter({ ...initialLetter, ...JSON.parse(savedLetter) });
+      }
+    } catch {
+    } finally {
+      setHasLoadedSavedLetter(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasLoadedSavedLetter) {
+      try {
+        window.localStorage.setItem(savedLetterKey, JSON.stringify(letter));
+      } catch {
+      }
+    }
+  }, [letter, hasLoadedSavedLetter]);
 
   const updateLetter = (field, value) => {
     setLetter((current) => ({ ...current, [field]: value }));
