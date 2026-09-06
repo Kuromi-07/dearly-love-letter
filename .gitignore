@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+.env.local
+.env.production.local
+.env.*.local
+dist/
+build/
+*.log
+.DS_Store
+.vscode/settings.json
+
