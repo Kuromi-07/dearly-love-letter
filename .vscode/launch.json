@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Next.js: dev",
+        "name": "Next.js: dev",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",

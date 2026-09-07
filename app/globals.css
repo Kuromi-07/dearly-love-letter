@@ -59,8 +59,11 @@ textarea { resize: vertical; line-height: 1.55; min-height: 125px; }
 .paragraph-break { display: block; height: 18px; }
 .signoff { margin-top: 38px; font-style: italic; }
 .signoff strong { font-style: normal; font-weight: 500; }
-.download-button { width: 100%; margin-top: 24px; padding: 17px 20px; display: flex; justify-content: space-between; align-items: center; border: 0; color: #fff; background: var(--coral); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; font-size: 11px; transition: background .2s, transform .2s; }
+.download-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+.download-button { width: 100%; padding: 17px 20px; display: flex; justify-content: space-between; align-items: center; border: 0; color: #fff; background: var(--coral); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; font-size: 11px; transition: background .2s, transform .2s; }
 .download-button:hover { background: #943b34; transform: translateY(-2px); }
+.download-button.secondary { color: var(--ink); background: transparent; border: 1px solid var(--coral); }
+.download-button.secondary:hover { color: #fff; background: var(--coral); }
 .arrow { font-size: 20px; font-family: sans-serif; font-weight: 300; }
 .download-note { color: var(--muted); text-align: center; font-size: 11px; margin: 13px 0; }
 footer { border-top: 1px solid rgba(37,37,34,.15); max-width: 1320px; padding: 19px 54px; margin: auto; color: var(--muted); display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }

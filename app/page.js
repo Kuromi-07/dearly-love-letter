@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toPng } from "html-to-image";
+import { jsPDF } from "jspdf";
 
 const templates = [
   {
@@ -46,8 +48,9 @@ const savedLetterKey = "dearly-letter";
 export default function Home() {
   const [letter, setLetter] = useState(initialLetter);
   const [activeTemplate, setActiveTemplate] = useState("classic");
-  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [downloadStatus, setDownloadStatus] = useState("");
   const [hasLoadedSavedLetter, setHasLoadedSavedLetter] = useState(false);
+  const [letterPaper, setLetterPaper] = useState(null);
 
   useEffect(() => {
     try {
@@ -72,7 +75,7 @@ export default function Home() {
 
   const updateLetter = (field, value) => {
     setLetter((current) => ({ ...current, [field]: value }));
-    setIsDownloaded(false);
+    setDownloadStatus("");
   };
 
   const applyTemplate = (template) => {
@@ -83,21 +86,45 @@ export default function Home() {
       greeting: template.greeting,
       body: template.body,
     }));
-    setIsDownloaded(false);
+    setDownloadStatus("");
   };
 
   const greeting = letter.greeting.replace("{name}", letter.recipient || "there");
 
-  const downloadLetter = () => {
-    const content = `${letter.title}\n\n${greeting}\n\n${letter.body}\n\n${letter.signoff}\n${letter.sender || ""}`;
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `a-letter-for-${(letter.recipient || "someone-special").toLowerCase().replace(/[^a-z0-9]+/g, "-")}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
-    setIsDownloaded(true);
+  const getFileName = () => `a-letter-for-${(letter.recipient || "someone-special").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+
+  const exportLetter = async (format) => {
+    if (!letterPaper) return;
+
+    try {
+      setDownloadStatus("Preparing your letter...");
+      const dataUrl = await toPng(letterPaper, {
+        backgroundColor: "#f8f5ed",
+        cacheBust: true,
+        pixelRatio: 2,
+      });
+
+      if (format === "pdf") {
+        const image = new Image();
+        image.src = dataUrl;
+        await new Promise((resolve, reject) => {
+          image.onload = resolve;
+          image.onerror = reject;
+        });
+        const pdf = new jsPDF({ unit: "px", format: [image.width, image.height] });
+        pdf.addImage(dataUrl, "PNG", 0, 0, image.width, image.height);
+        pdf.save(`${getFileName()}.pdf`);
+      } else {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = `${getFileName()}.png`;
+        link.click();
+      }
+
+      setDownloadStatus(format === "pdf" ? "PDF downloaded" : "Image downloaded");
+    } catch {
+      setDownloadStatus("Download failed. Please try again.");
+    }
   };
 
   return (
@@ -153,7 +180,7 @@ export default function Home() {
 
           <section className="preview-column" aria-label="Letter preview">
             <div className="preview-toolbar"><span><span className="live-dot" /> LIVE PREVIEW</span><span>{letter.body.length} characters</span></div>
-            <article className="letter-paper">
+            <article className="letter-paper" ref={setLetterPaper}>
               <div className="paper-topline"><span>DEARLY / 2026</span><span>♡</span></div>
               <div className="paper-content">
                 <p className="paper-kicker">A NOTE FOR {letter.recipient ? letter.recipient.toUpperCase() : "SOMEONE SPECIAL"}</p>
@@ -164,8 +191,11 @@ export default function Home() {
               </div>
               <div className="paper-footer"><span>made with intention</span><span>✦</span></div>
             </article>
-            <button className="download-button" onClick={downloadLetter}><span>{isDownloaded ? "Letter downloaded" : "Download your letter"}</span><span className="arrow">↗</span></button>
-            <p className="download-note">A simple text file, ready to print, fold, or send.</p>
+            <div className="download-actions">
+              <button className="download-button" onClick={() => exportLetter("png")}><span>Save as image</span><span className="arrow">↗</span></button>
+              <button className="download-button secondary" onClick={() => exportLetter("pdf")}><span>Save as PDF</span><span className="arrow">↗</span></button>
+            </div>
+            <p className="download-note">{downloadStatus || "Your background design is included in both formats."}</p>
           </section>
         </div>
       </section>
