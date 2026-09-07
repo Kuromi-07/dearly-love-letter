@@ -56,6 +56,7 @@ export default function Home() {
     try {
       const savedLetter = window.localStorage.getItem(savedLetterKey);
       if (savedLetter) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage must be read after hydration to avoid SSR mismatch
         setLetter({ ...initialLetter, ...JSON.parse(savedLetter) });
       }
     } catch {
